@@ -20,7 +20,9 @@ What's to do:
 Q: How do I run this?
 
 A: `npm install` to install dependencies.
+
 A: `node test.js` to start the proxy.
+
 A: Start minecraft and connect to `localhost:3622`.
 
 Q: It doesn't work, it says something about "v => transform" being an invalid character.
