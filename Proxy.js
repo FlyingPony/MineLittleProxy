@@ -36,7 +36,12 @@ Proxy.prototype.tick = function(){
                 var ServerInfo = this.serverInfos[Argv[1]];
                 var UserInfo = {"username":Argv[2]};
                 
-                Client.addOutgoing(ServerInfo, UserInfo);
+                // Make sure we don't try to connect to a non-existant server
+                if(ServerInfo == undefined || UserInfo.username == undefined){
+                    Client.tell("Invalid connect");
+                }else{
+                    Client.addOutgoing(ServerInfo, UserInfo);
+                }
             }else if(Argv[0] == 'switch'){
                 if(Client.isValidOutgoing(Argv[1], Argv[2])){
                     Client.tell("Switching to player " + Argv[2] + " on server " + Argv[1]);
