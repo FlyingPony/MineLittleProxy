@@ -1,0 +1,21 @@
+HOW TO PROXY COMMANDS
+
+/proxy say <text>
+> Pass <text> on directly to the server, e.g "/proxy say /proxy" would
+> result in "/proxy" being sent to the server.
+
+/proxy quit
+> Disconnect all of the currently connected players, and kicks you. Keep in mind it
+> doesn't close down the proxy server, so you can rejoin without restarting the proxy.
+
+/proxy connect <server> <username>
+> Connects the player <username> to a given server. The server may deny
+> the newer connection and keep the older one.
+
+/proxy switch <server> <username>
+> Changes what player you are playing as. The server option is necessary as the same
+> player could be connected to multiple servers at once.
+
+/proxy disconnect <server> <username>
+> Logs out a given player out of the given server. If you end the player that you
+> are controlling, you won't automatically switched to another player.
