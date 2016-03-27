@@ -42,6 +42,8 @@ Client.prototype.addOutgoing = function(ServerInfo, UserInfo){
     }
     
     this.OutgoingClients[ServerInfo.name][UserInfo.username] = new ClientReflector(ClientNMP);
+    
+    this.info("Connected " + UserInfo.username + " to server " + ServerInfo.name);
 }
 
 Client.prototype.setOutgoing = function(ServerName, Username){
@@ -50,16 +52,26 @@ Client.prototype.setOutgoing = function(ServerName, Username){
     
     this.currentRoute.serverName = ServerName;
     this.currentRoute.username = Username;
+    
+    this.info("Switched to player " + Username + " on server " + ServerName);
 }
 
-Client.prototype.endOutgoing = function(ServerName, Username){
+Client.prototype.endOutgoing = function(ServerName, Username, wasAbrupt){
     this.OutgoingClients[ServerName][Username].end();
     delete this.OutgoingClients[ServerName][Username];
+    
+    if(wasAbrupt == true){
+        this.warn("Player " + Username + "'s connection to server " + ServerName + " was abruptly ended");
+    }else{
+        this.info("Player " + Username + " was disconnected from server " + ServerName);
+    }
     
     // Did we just disconnect from our current server?
     if(ServerName == this.currentRoute.serverName && Username == this.currentRoute.username){
         this.currentRoute.serverName = undefined;
         this.currentRoute.username = undefined;
+        
+        this.warn("You current connection ended");
     }
 }
 
@@ -124,10 +136,30 @@ Client.prototype.end = function(){
 
 Client.prototype.tell = function(Text){
     if(this.IncomingClient != undefined){
+        if(typeof Text == 'string'){
+            Text = "[Proxy] " + Text;
+        }else{
+            Text.text = "[Proxy] " + Text.text;
+        }
+        
         this.IncomingClient.sendPacket('chat',{
-            "message": JSON.stringify("[Proxy] " + Text)
+            "message": JSON.stringify(Text)
         });
     }
+}
+
+Client.prototype.info = function(Text){
+    this.tell({
+        "text": Text,
+        "color": "green"
+    });
+}
+
+Client.prototype.warn = function(Text){
+    this.tell({
+        "text": Text,
+        "color": "red"
+    });
 }
 
 Client.prototype.tick = function(){
@@ -178,9 +210,9 @@ Client.prototype.tick = function(){
                 }
             }
             
-            // Is this connection dead?
+            // Did the outgoing connection die by the target server closing it?
             if(OutgoingClient.isAlive == false){
-                this.endOutgoing(ServerName, Username);
+                this.endOutgoing(ServerName, Username, true);
             }
         }
     }

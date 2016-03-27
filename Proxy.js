@@ -38,22 +38,21 @@ Proxy.prototype.tick = function(){
                 
                 // Make sure we don't try to connect to a non-existant server
                 if(ServerInfo == undefined || UserInfo.username == undefined){
-                    Client.tell("Invalid connect");
+                    Client.warn("Invalid connect");
                 }else{
                     Client.addOutgoing(ServerInfo, UserInfo);
                 }
             }else if(Argv[0] == 'switch'){
                 if(Client.isValidOutgoing(Argv[1], Argv[2])){
-                    Client.tell("Switching to player " + Argv[2] + " on server " + Argv[1]);
                     Client.setOutgoing(Argv[1], Argv[2]);
                 }else{
-                    Client.tell("Invalid switch");
+                    Client.warn("Invalid switch");
                 }
             }else if(Argv[0] == 'disconnect'){
                 if(Client.isValidOutgoing(Argv[1], Argv[2])){
                     Client.endOutgoing(Argv[1], Argv[2]);
                 }else{
-                    Client.tell("Invalid disconnect");
+                    Client.warn("Invalid disconnect");
                 }
             }
         }
