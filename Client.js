@@ -131,35 +131,36 @@ Client.prototype.tell = function(Text){
 }
 
 Client.prototype.tick = function(){
-    // Tick the incoming client, if there is a outgoing client.
+    // Tick the incoming client, even if there is not outgoing client so that the player can issue commands.
     if(this.IncomingClient != undefined){
         var Packets = this.IncomingClient.getPackets();
         
-        // Only send the packets if there's outgoing client.
-        if(this.currentRoute.serverName && this.currentRoute.username){
-            var CurrentOutgoing = this.getOutgoingClient();
+        // 
+        
+        for(i in Packets){
+            var Packet = Packets[i];
             
-            for(i in Packets){
-                var Packet = Packets[i];
-                
-                // Intercept the packet if its for the proxy
-                if(Packet.metadata.name == 'chat' && Packet.packet.message.split("/proxy")[0] == ''){
-                    // Allow the player to be able to actually be able to send a command
-                    // that is used by the proxy, so that there aren't any conflicts.
-                    var m = Packet.packet.message;
-                    if(m.split("/proxy say")[0] == ''){
-                        // Remove the "/proxy say ".
-                        Packet.packet.message = m.slice("/proxy say".length + 1); // for the extra space.
-                    }else{
-                        // Don't send this command, but keep note of it for the main proxy.
-                        this.commands.push(m.substring(1).split(" "));
-                        continue;
-                    }
+            // Intercept the packet if its for the proxy
+            if(Packet.metadata.name == 'chat' && Packet.packet.message.split("/proxy")[0] == ''){
+                // Allow the player to be able to actually be able to send a command
+                // that is used by the proxy, so that there aren't any conflicts.
+                var m = Packet.packet.message;
+                if(m.split("/proxy say")[0] == ''){
+                    // Remove the "/proxy say ".
+                    Packet.packet.message = m.slice("/proxy say".length + 1); // for the extra space.
+                }else{
+                    // Don't send this command, but keep note of it for the main proxy.
+                    this.commands.push(m.substring(1).split(" "));
+                    continue;
                 }
-                
-                CurrentOutgoing.sendPacket(Packet.metadata.name, Packet.packet);
+            }
+            
+            // Send it out if applicable.
+            if(this.getOutgoingClient() != undefined){
+                this.getOutgoingClient().sendPacket(Packet.metadata.name, Packet.packet);
             }
         }
+            
     }
     
     
