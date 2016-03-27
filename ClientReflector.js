@@ -22,8 +22,15 @@ function ClientReflector(Client){
         this.isAlive = false;
     }
     
+    function HandleError(e){
+        if(e.syscall != 'connect'){
+            throw e;
+        }
+    }
+    
     Client.on('packet', HandlePacket.bind(this));
     Client.on('end',    HandleEnd.bind(this));
+    Client.on('error', HandleError.bind(this));
 }
 
 ClientReflector.prototype.getPackets = function(){
