@@ -54,6 +54,7 @@ Client.prototype.setOutgoing = function(ServerName, Username){
 
 Client.prototype.endOutgoing = function(ServerName, Username){
     this.OutgoingClients[ServerName][Username].end();
+    delete this.OutgoingClients[ServerName][Username];
     
     // Did we just disconnect from our current server?
     if(ServerName == this.currentRoute.serverName && Username == this.currentRoute.username){

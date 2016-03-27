@@ -49,6 +49,12 @@ Proxy.prototype.tick = function(){
                 }else{
                     Client.tell("Invalid switch");
                 }
+            }else if(Argv[0] == 'disconnect'){
+                if(Client.isValidOutgoing(Argv[1], Argv[2])){
+                    Client.endOutgoing(Argv[1], Argv[2]);
+                }else{
+                    Client.tell("Invalid disconnect");
+                }
             }
         }
     }
