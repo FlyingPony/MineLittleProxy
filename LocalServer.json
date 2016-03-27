@@ -1,0 +1,5 @@
+{
+  "port": 3622,
+  "motd": "Local proxy server",
+  "online-mode": false
+}

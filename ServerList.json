@@ -1,0 +1,12 @@
+[
+    {
+        "name": "local",
+        "ip": "localhost",
+        "port": 25565
+    },
+    {
+        "name": "rom",
+        "ip": "rom1504.fr",
+        "port": 25565
+    }
+]
