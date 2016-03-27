@@ -19,8 +19,10 @@ What's to do:
 
 Q: How do I run this?
 
-A: `node test.js`, and connect with a minecraft client to `localhost:3622`.
+A: `npm install` to install dependencies.
+A: `node test.js` to start the proxy.
+A: Start minecraft and connect to `localhost:3622`.
 
 Q: It doesn't work, it says something about "v => transform" being an invalid character.
 
-A: Go bother rom. (You can manually fix it by changing it to a anonymous function.)
+A: Go bother rom. (You can manually fix it by changing it to a anonymous function or switching to a newer version of node.)
