@@ -53,7 +53,17 @@ Client.prototype.setOutgoing = function(ServerName, Username){
     this.currentRoute.serverName = ServerName;
     this.currentRoute.username = Username;
     
-    this.info("Switched to player " + Username + " on server " + ServerName);
+    if(this.getOutgoingClient() == undefined){
+        this.warn("You just switched to an invalid outgoing connection!");
+        this.currentRoute.serverName = {};
+    }else{
+        this.info("Switched to player " + Username + " on server " + ServerName);
+        
+        // Tell the client what the world is.
+        if(this.IncomingClient){
+            this.IncomingClient.sendWorld(this.getOutgoingClient().Recorder);
+        }
+    }
 }
 
 Client.prototype.endOutgoing = function(ServerName, Username, wasAbrupt){
@@ -87,6 +97,7 @@ Client.prototype.setIncomingClient = function(ClientNMP){
     this.IncomingClient = IncomingClient;
     this.username = IncomingClient.getUsername();
     
+    // Send the login packet to the client can do stuff
     IncomingClient.sendPacket('login', {
         entityId: Client.id,
         levelType: 'default',
@@ -96,14 +107,22 @@ Client.prototype.setIncomingClient = function(ClientNMP){
         maxPlayers: 10,
         reducedDebugInfo:false
     });
-    IncomingClient.sendPacket('position', {
-        x: 0,
-        y: 256,
-        z: 0,
-        yaw: 0,
-        pitch: 0,
-        flags: 0x00
-    });
+    
+    if(this.getOutgoingClient() != undefined){
+        // There's an outgoing client.
+        var Recorder = this.getOutgoingClient().Recorder;
+        IncomingClient.sendWorld(Recorder);
+    }else{
+        // We don't have to send anything if there isn't a session selected.
+        IncomingClient.sendPacket('position', {
+            x: 0,
+            y: 256,
+            z: 0,
+            yaw: 0,
+            pitch: 0,
+            flags: 0x00
+        });
+    }
 }
 
 Client.prototype.getOutgoingClient = function(){

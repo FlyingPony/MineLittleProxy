@@ -1,5 +1,7 @@
 //
 
+var WorldRecorder = require("./WorldRecorder.js");
+
 module.exports = ClientReflector;
 
 function ClientReflector(Client){
@@ -7,6 +9,7 @@ function ClientReflector(Client){
     this.isActive = false;
     this.packets = [];
     this.ClientNMP = Client;
+    this.Recorder = new WorldRecorder(Client);
     
     function HandlePacket(Packet, Metadata){
         if(this.isAlive == false || isBadPacket(Packet, Metadata)) return;
@@ -23,8 +26,14 @@ function ClientReflector(Client){
     }
     
     function HandleError(e){
-        if(e.syscall != 'connect'){
+        this.isAlive = false;
+        
+        if(e.syscall != 'connect' && e.message.split("ECONNRESET").length != 1){
             throw e;
+        }else{
+            console.log("Something bad happened, and Node is probably in an unstable state.");
+            console.log("Don't worry about it, it happens all the time");
+            console.log("Error message: " + e.message);
         }
     }
     
@@ -45,6 +54,32 @@ ClientReflector.prototype.sendPacket = function(Name, Packet){
     logPacket(Name, Packet);
     
     this.ClientNMP.write(Name, Packet);
+}
+
+ClientReflector.prototype.sendWorld = function(OtherRecorder){
+    // TODO: clear out old chunks that where sent to client.
+    for(var Key in OtherRecorder.chunks){
+        var Chunk = OtherRecorder.chunks[Key];
+        
+        this.sendPacket('map_chunk', {
+            x: Chunk.x,
+            z: Chunk.z,
+            groundUp: true,
+            bitMap: 0xffff,
+            chunkData: Chunk.dump()
+        });
+    }
+    
+    var PlayerPos = OtherRecorder.getPlayerPosition();
+    
+    this.sendPacket('position', {
+        x: PlayerPos.x,
+        y: PlayerPos.y,
+        z: PlayerPos.z,
+        yaw: 0,
+        pitch: 0,
+        flags: 0 // TODO: figure out what flags are.
+    });
 }
 
 ClientReflector.prototype.getUsername = function(){
