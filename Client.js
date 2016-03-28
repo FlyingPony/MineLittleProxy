@@ -32,7 +32,8 @@ Client.prototype.addOutgoing = function(ServerInfo, UserInfo){
         "host": ServerInfo.ip,
         "port": ServerInfo.port,
         "username": UserInfo.username,
-        "password": UserInfo.password
+        "password": UserInfo.password,
+        "version": "1.9"
     }
     
     var ClientNMP = NMP.createClient(OutgoingSettings);

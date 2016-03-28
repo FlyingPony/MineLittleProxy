@@ -32,7 +32,7 @@ module.exports = function(ServerInfo){
 
 function say(Client, Text){
     Client.write('chat', {
-        "message": JSON.stringify(Text)
+        "message": JSON.stringify({"text":Text})
     });
 }
 

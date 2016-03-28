@@ -65,7 +65,8 @@ Proxy.prototype.listen = function(ServerSettings){
     for(var i = 1; i <= this.numIdleServers; i++){
         IdleServerInit({
             "port": ServerSettings.port + i,
-            "online-mode": false
+            "online-mode": false,
+            "version": "1.9"
         });
         
         this.addServer({

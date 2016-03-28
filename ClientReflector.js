@@ -28,13 +28,9 @@ function ClientReflector(Client){
     function HandleError(e){
         this.isAlive = false;
         
-        if(e.syscall != 'connect' && e.message.split("ECONNRESET").length != 1){
-            throw e;
-        }else{
-            console.log("Something bad happened, and Node is probably in an unstable state.");
-            console.log("Don't worry about it, it happens all the time");
-            console.log("Error message: " + e.message);
-        }
+        console.log("Something bad happened, and Node is probably in an unstable state.");
+        console.log("Don't worry about it, it happens all the time");
+        console.log("Error message: " + e.message);
     }
     
     Client.on('packet', HandlePacket.bind(this));
