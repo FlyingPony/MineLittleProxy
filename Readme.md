@@ -17,13 +17,19 @@ What's to do:
 
 >Simulate physics/movement on the player the user is not currently controlling, so that they don't get kicked.
 
+Q: When I try to connect to a server, the connection is abruptly ended, why?
+
+> You're probably trying to connect to a server that's running a previous version of minecraft (1.8 usually).
+> Or you're trying to join an online server without authentication. Auth is enabled by
+> default on most servers, so you'll need to use the correct password for the name you chose ;)
+
 Q: How do I run this?
 
-A: `npm install` to install dependencies.
+> `npm install` to install dependencies.
 
-A: `node test.js` to start the proxy.
+> `node test.js` to start the proxy.
 
-A: Start minecraft and connect to `localhost:3622`.
+> Start minecraft and connect to `localhost:3622`.
 
 Q: It doesn't work, it says something about "v => transform" being an invalid character.
 
