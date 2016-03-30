@@ -68,11 +68,11 @@ Client.prototype.setOutgoing = function(ServerName, Username){
 }
 
 Client.prototype.endOutgoing = function(ServerName, Username, wasAbrupt){
-    this.OutgoingClients[ServerName][Username].end();
-    delete this.OutgoingClients[ServerName][Username];
+    var EndedClient = this.OutgoingClients[ServerName][Username];
+    EndedClient.end();
     
     if(wasAbrupt == true){
-        this.warn("Player " + Username + "'s connection to server " + ServerName + " was abruptly ended");
+        this.warn("Player " + Username + "'s connection to server " + ServerName + " was kicked for: " + EndedClient.endReason);
     }else{
         this.info("Player " + Username + " was disconnected from server " + ServerName);
     }
@@ -82,8 +82,11 @@ Client.prototype.endOutgoing = function(ServerName, Username, wasAbrupt){
         this.currentRoute.serverName = undefined;
         this.currentRoute.username = undefined;
         
-        this.warn("You current connection ended");
+        this.warn("You current connection ended, you are no longer connected to any server.");
     }
+    
+    // Clean up the client.
+    delete this.OutgoingClients[ServerName][Username];
 }
 
 Client.prototype.isValidOutgoing = function(ServerName, Username){

@@ -7,6 +7,8 @@ module.exports = ClientReflector;
 function ClientReflector(Client){
     this.isAlive = true;
     this.isActive = false;
+    this.endReason = undefined;
+    
     this.packets = [];
     this.ClientNMP = Client;
     this.Recorder = new WorldRecorder(Client);
@@ -15,6 +17,13 @@ function ClientReflector(Client){
         if(this.isAlive == false || isBadPacket(Packet, Metadata)) return;
         
         this.isActive = true;
+        
+        if(Metadata.name == 'disconnect'){
+            this.endReason = Packet.reason;
+            this.isAlive = false;
+            return;
+        }
+        
         this.packets.push({
             "packet": Packet,
             "metadata": Metadata
